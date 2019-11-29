@@ -8,13 +8,13 @@ namespace ConsoleApp1
 {
     class Student
     {
-        public  int StudentId;
-        public string FirstName;
-        public string LastName;
-        public string ClassName;
-        public DateTimeOffset StartDate;
-        public string LastClassCompleted;
-        public DateTimeOffset LastClassCompletedOn;
+        public  int StudentId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ClassName { get; set; }
+        public DateTimeOffset StartDate { get; set; }
+        public string LastClassCompleted { get; set; }
+        public DateTimeOffset LastClassCompletedOn { get; set; }
        
        
         //public int StudentId
