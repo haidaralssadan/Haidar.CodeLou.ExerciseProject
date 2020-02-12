@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
+
 namespace ConsoleApp1
 {
     class Program
@@ -17,7 +18,7 @@ namespace ConsoleApp1
         {
             var ans = "y";
             var studentList = new List<Student>();
-
+            
             while (true)
             {
                 Console.WriteLine("Welcome to the Student List program.\n");
@@ -51,13 +52,13 @@ namespace ConsoleApp1
                     }
                     else
                     {
-                        serachList(studentList);
+                        filterList(studentList);
                     }
                 }   // Search students
 
                 else if (myChoice == 3)
                 {
-                    Console.Write("This will initialize the list with three test records?\nAre you sure?  Y\\N\n");
+                    Console.Write("This will initialize the list with three test records?\nWould you like to proceed?  Y\\N\n");
                     ans = Console.ReadLine();
                     if (ans.ToLower() == "y")
                     {
@@ -80,79 +81,77 @@ namespace ConsoleApp1
 
                 else if (myChoice == 5)
                 {
-                    Console.Write("This option is under development");
-                    clScreen();
+                    var strID = "";
+                    var delID = -1;
+                    while (delID == -1)
+                    {
+                        Console.Clear();
+                        if (studentList.Count == 0)
+                        {
+                            Console.Write("The students list is empty, no students to search.\nAdd students first and try later");
+                        }
+                        else
+                        { 
+                            Console.Write("Deleteing a Student\n\n");
+                            Console.Write("Please type the ID of the student you would like to delete\nType q to cancel.\n");
+                            delID = -1;
+                            strID = Console.ReadLine();
+                            if (strID == "q")
+                            {
+                                Console.WriteLine("you decided to return to main menue");
+                                clScreen();
+                                break;
+                            }
+                            delID = Convert.ToInt32(strID);
+                            //if (delID <= 0)
+                            
+                                if (delID > studentList.Count + 1)
+                                {
+                                    Console.Write("Student ID is greater than last ID");
+                                    delID = -1;
+                                }
+                                else if (delID <= 0)
+                                {
+                                    Console.Write("Student ID is invalid");
+                                    delID = -1;
+                                }
+                            else if (searchList(studentList, delID) != -1)
+                            {
+
+                               
+                                Console.Write($"You are about to delete student with ID {delID}, are you sure?");
+
+                                studentList.RemoveAt(delID);
+                                printList(studentList);
+
+
+                                //find student and remove
+                            }
+                                //if (delID == -1) strID = Console.ReadLine();
+                            
+                        }
+                    }
+
+                    
+
                 }    // Delete a student
 
                 else if (myChoice == 6)
                 {
-                    Console.WriteLine("You are about to save the student list to the default file Student.txt!\nProceed to save? Y\\N");
-                    ans = Console.ReadLine();
-                    if (ans.ToLower() == "y")
-                    {
-                        String fileName = "students.txt";
-                        Console.WriteLine(WriteFile(fileName, ref studentList));
-                    }
+                    Console.Write("This option is under development");
+                    clScreen();
                 }    // Save to the default file
 
                 else if (myChoice == 7)
                 {
-                    Console.Write("Load the contents of the default file Students.txt to the list?  Y\\N: ");
-                    ans = Console.ReadLine();
-                    if (ans.ToLower() == "y")
-                    {
-                        var checkResult = ReadFile("students.txt", ref studentList);
-                        if (checkResult == true)
-                        {
-                            Console.WriteLine($"File was loaded successfully?");
-                            if (studentList.Count() == 0)
-                            {
-                                Console.WriteLine("\nThe student list is empty, no students to show!");
-                            }
-                            else
-                            {
-                                printList(studentList);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"File was NOT loaded successfully?");
-                            clScreen();
-                        }
-                    }
-                    //clScreen();
+                    Console.Write("This option is under development");
+                    clScreen();
                 }    //Load from default file
 
                 else if (myChoice == 8)
                 {
-                    Console.Write("Enter file name to load contents from: ");
-                    ans = Console.ReadLine();
-                    if (string.IsNullOrEmpty(ans))
-                    {
-                        Console.WriteLine("No file name was entered, file name cannot be null or empty");
-                    }
-                    else
-                    {
-                        var checkResult = ReadFile(ans, ref studentList);
-                        if (checkResult == true)
-                        {
-                            Console.WriteLine($"File {ans} was loaded successfully?");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"File {ans} was NOT loaded successfully?");
-                            clScreen();
-                        }
-                    }
+                    Console.Write("Enter student ID to update");
 
-                    if (studentList.Count() == 0)
-                    {
-                        Console.WriteLine("\nThe student list is empty, no students to show!");
-                    }
-                    else
-                    {
-                        printList(studentList);
-                    }
                     clScreen();
                 }    //Load from user defined file
 
@@ -354,7 +353,7 @@ namespace ConsoleApp1
             clScreen();
         }
 
-        static void serachList (List<Student> studArg)
+        static void filterList (List<Student> studArg)
         {
             var studToSearch = " ";
             var fName= " ";
@@ -386,6 +385,55 @@ namespace ConsoleApp1
                 printList(searchRes);
             }
         }
+
+        static int searchList(List<Student> studArg,int stdToDel)
+        {
+            int serCount = 0;
+
+            for (int i = 0; i < studArg.Count; i++)
+            {
+                if (studArg[i].StudentId == stdToDel)
+                {
+                    return stdToDel;
+                }
+            }
+
+            return -1;
+        }
+
+
+        static void updateStud(List<Student> studArg)
+        {
+            var studToUpdate = 0;
+            var fName = " ";
+            var lName = " ";
+            int serCount = 0;
+            var searchRes = new List<Student>();
+
+            Console.WriteLine("Enter Student ID to update");
+            //studToSearch = Convert.ToInt32(Console.ReadLine());
+            studToUpdate = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < studArg.Count; i++)
+            {
+                //fName = studArg[i].FirstName;
+               //lName = studArg[i].LastName;
+                if (studArg[i].StudentId == studToUpdate)
+                {
+                    // display stud fields to update one
+                }
+            }
+            if (serCount == 0)
+            {
+                Console.WriteLine($"Student ID {studToUpdate} was not found");
+                clScreen();
+            }
+            else
+            {
+                printList(searchRes);
+            }
+        }
+
 
         static void clScreen()
             {
