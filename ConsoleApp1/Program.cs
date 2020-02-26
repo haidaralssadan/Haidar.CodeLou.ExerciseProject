@@ -32,6 +32,7 @@ namespace ConsoleApp1
 
                 if (myChoice == 1)
                 {
+                    Console.Clear();
                     if (studentList.Count() == 0)
                     {
                         Console.WriteLine("\nThe student list is empty, no students to show!");
@@ -40,11 +41,14 @@ namespace ConsoleApp1
                     else
                     {
                         printList(studentList);
+                        clScreen();
+
                     }
                 }  // List students
 
                 else if (myChoice == 2)
                 {
+                    Console.Clear();
                     if (studentList.Count() == 0)
                     {
                         Console.WriteLine("\nThe student list is empty, no students to search!");
@@ -58,14 +62,16 @@ namespace ConsoleApp1
 
                 else if (myChoice == 3)
                 {
-                    Console.Write("This will initialize the list with three test records?\nWould you like to proceed?  Y\\N\n");
+                    Console.Clear();
+                    Console.Write("Initializing the list with three test records?\nWould you like to proceed?  Y\\N:   ");
                     ans = Console.ReadLine();
                     if (ans.ToLower() == "y")
                     {
-                        clScreen();
+                        Console.Clear(); 
                         initList(studentList);
                         Console.WriteLine();
                         printList(studentList);
+                        clScreen();
                     }
                     else
                     {
@@ -81,71 +87,112 @@ namespace ConsoleApp1
 
                 else if (myChoice == 5)
                 {
-                    var strID = "";
-                    var delID = -1;
-                    while (delID == -1)
+
+                   Console.Clear();
+                    if (studentList.Count == 0)
                     {
-                        Console.Clear();
-                        if (studentList.Count == 0)
+                        Console.Write("The students list is empty, no students to search.\nAdd students first and try later");
+                        clScreen();
+                    }
+                    else
+                    {
+                        Console.Write("Current students in the list of Students\n");
+                        printList(studentList);                   
+
+                        Console.Write("\nPlease type the ID of the student to delete\nType q to cancel.  ");
+
+                        var inputStudIDToDelete = "";
+                        var ActualStudIDToDelete = -1;
+                        while (ActualStudIDToDelete == -1)
                         {
-                            Console.Write("The students list is empty, no students to search.\nAdd students first and try later");
-                        }
-                        else
-                        { 
-                            Console.Write("Deleteing a Student\n\n");
-                            Console.Write("Please type the ID of the student you would like to delete\nType q to cancel.\n");
-                            delID = -1;
-                            strID = Console.ReadLine();
-                            if (strID == "q")
+                            //delID = -1;
+                            inputStudIDToDelete = Console.ReadLine();
+                            if (inputStudIDToDelete.ToLower() == "q")
                             {
-                                Console.WriteLine("you decided to return to main menue");
-                                clScreen();
+                                Console.WriteLine("You decided to return to main menue");
+                                Console.Clear();
                                 break;
                             }
-                            delID = Convert.ToInt32(strID);
-                            //if (delID <= 0)
-                            
-                                if (delID > studentList.Count + 1)
-                                {
-                                    Console.Write("Student ID is greater than last ID");
-                                    delID = -1;
-                                }
-                                else if (delID <= 0)
-                                {
-                                    Console.Write("Student ID is invalid");
-                                    delID = -1;
-                                }
-                            else if (searchList(studentList, delID) != -1)
+
+                            else if (Convert.ToInt32(inputStudIDToDelete) <= 0)
                             {
-
-                               
-                                Console.Write($"You are about to delete student with ID {delID}, are you sure?");
-
-                                studentList.RemoveAt(delID);
-                                printList(studentList);
-
-
-                                //find student and remove
+                                Console.Write("Student ID is invalid");
                             }
-                                //if (delID == -1) strID = Console.ReadLine();
-                            
+                            else 
+                            {
+                                ActualStudIDToDelete = (searchList(studentList, inputStudIDToDelete));
+                                if (ActualStudIDToDelete != -1)
+                                {
+                                    Console.Write($"\nDelete student with ID = {studentList[ActualStudIDToDelete].StudentId}? Y / N?  ");
+                                    ans= Console.ReadLine();
+                                    if (ans.ToLower() == "y")
+                                    {
+                                        Console.Clear();
+                                        studentList.RemoveAt(ActualStudIDToDelete);
+                                        Console.Write($"\nStudent with ID = {inputStudIDToDelete} was deleted\n");
+                                        printList(studentList);
+                                        clScreen();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.Write($"\nStudent with ID = {inputStudIDToDelete} was not found\n");
+
+                                }                                
+                            }
                         }
                     }
 
-                    
 
                 }    // Delete a student
 
                 else if (myChoice == 6)
                 {
-                    Console.Write("This option is under development");
+                    Console.WriteLine("Saving student to the file Student.txt! Proceed to save? Y\\N   ");
+                    ans = Console.ReadLine();
+                    if (ans.ToLower() == "y")
+                    {
+                        String fileName = "students.txt";
+                        //strSaveResult = WriteFile(fileName, ref studentList);
+                        if (WriteFile(fileName, ref studentList) == true)
+                        {
+                            Console.WriteLine("List saved successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Save failed.");
+                        }
+                    }                  
                     clScreen();
                 }    // Save to the default file
 
                 else if (myChoice == 7)
                 {
-                    Console.Write("This option is under development");
-                    clScreen();
+                    Console.Clear();
+                    Console.Write("Load the contents of the default file Students.txt? Y\\N: ");
+                    ans = Console.ReadLine();
+                    if (ans.ToLower() == "y")
+                    {
+                        var checkResult = ReadFile("students.txt", ref studentList);
+                        if (checkResult == true)
+                        {
+                            Console.WriteLine($"File was loaded successfully?");
+                            if (studentList.Count() == 0)
+                            {
+                                Console.WriteLine("\nThe student list is empty, no students to show!");
+                            }
+                            else
+                            {
+                                printList(studentList);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File was NOT loaded successfully?");
+                            clScreen();
+                        }
+                    }
+                    //clScreen();                
                 }    //Load from default file
 
                 else if (myChoice == 8)
@@ -208,7 +255,7 @@ namespace ConsoleApp1
             //Console.WriteLine($"Student Name {studArg[2].FirstName}");
 
             Console.WriteLine();
-            Console.WriteLine($"{studArg.Count()} Students were added to the list.");  
+            Console.WriteLine($"The students list has {studArg.Count()} records now.");  
 
             //Console.WriteLine($"Student Name {studArg[0].FirstName}");
             //Console.WriteLine($"Student Name {studArg[1].FirstName}");
@@ -350,7 +397,6 @@ namespace ConsoleApp1
 
                 Console.WriteLine($"{stud.StudentId}\t| {nameStr}| {stud.ClassName}");
             }
-            clScreen();
         }
 
         static void filterList (List<Student> studArg)
@@ -386,21 +432,17 @@ namespace ConsoleApp1
             }
         }
 
-        static int searchList(List<Student> studArg,int stdToDel)
+        static int  searchList(List<Student> studArg,string stdToDel)
         {
-            int serCount = 0;
-
             for (int i = 0; i < studArg.Count; i++)
             {
-                if (studArg[i].StudentId == stdToDel)
+                if (studArg[i].StudentId == Convert.ToInt32(stdToDel))
                 {
-                    return stdToDel;
+                    return i;
                 }
             }
-
             return -1;
         }
-
 
         static void updateStud(List<Student> studArg)
         {
@@ -434,7 +476,6 @@ namespace ConsoleApp1
             }
         }
 
-
         static void clScreen()
             {
                 Console.WriteLine("");
@@ -445,39 +486,30 @@ namespace ConsoleApp1
 
         static bool ReadFile (string fName, ref List<Student> tempStud)
         {
-            String FilePath = Directory.GetCurrentDirectory();
-            //Console.WriteLine($"\nCurrent Path is {FilePath}");
-            string FileName = fName;
-            //Console.WriteLine($"File name is {FileName}");
-            String FullPath = $"{FilePath}\\{FileName}";
-            //Console.WriteLine(FullPath);
-            //Console.WriteLine("Press ENTER key to continue.");
-            //Console.ReadLine();
-
+            String FullPath = Path.Combine(Directory.GetCurrentDirectory(), fName);
             if (File.Exists(FullPath))
             {
-                Console.WriteLine($"File was found.\n{FullPath}\nLoad its contents? Y\\N");
-                var ans = "y";
-                ans = Console.ReadLine();
+                Console.WriteLine($"Student.File was found, load its contents? Y\\N : ");
+                var ans = Console.ReadLine();
                 if (ans == "y" || ans == "Y")
                 {           
                     string readResult = string.Empty;
                     string writeResult = string.Empty;
                     using (StreamReader r = new StreamReader(FullPath))
 
-                        if (r.EndOfStream)
-                        {
-                           Console.WriteLine($"File is empty,no records were loaded\n");
-                           return false;
-                        }
-                        else
-                        {
-                           var json = r.ReadToEnd();
-                           tempStud = JsonConvert.DeserializeObject<List<Student>>(json);
-                           return true;
-                        }
-                    
-                    
+                    if (r.EndOfStream)
+                    {
+                        Console.WriteLine($"File is empty,no records were loaded\n");
+                        return false;
+                    }
+                    else
+                    {
+                        var json = r.ReadToEnd();
+                        tempStud = JsonConvert.DeserializeObject<List<Student>>(json);
+                        return true;
+                        // return JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(_studentRepositoryPath));
+                    }
+
                 }
                 else
                 {
@@ -489,49 +521,47 @@ namespace ConsoleApp1
                 Console.WriteLine($"{FullPath} was found NOT found");
                 return false;
             }
-            //Console.ReadLine();                     
-        }
+
+        } //Console.ReadLine(); 
 
         static bool WriteFile(string fName, ref List<Student> tempStud)
         {
-            String FilePath = Directory.GetCurrentDirectory();
-            //Console.WriteLine($"\nCurrent Path is {FilePath}");
-            string FileName = fName;
-            //Console.WriteLine($"File name is {FileName}");
-
-            String FullPath = $"{FilePath}\\{FileName}";
-            //Console.WriteLine(FullPath);
-            Console.WriteLine("Press ENTER key to continue.");
-            Console.ReadLine();
-            var ans = "y";
+            String FullPath = Path.Combine(Directory.GetCurrentDirectory(),fName);
+            //if (ans.ToLower() != "y") { return false; }
 
             if (File.Exists(FullPath))
             {
-                Console.WriteLine($"{FullPath} is already exists, overwrite it? Y/N");
-                ans = Console.ReadLine();
-                if (ans.ToLower() == "y")
+                Console.WriteLine("Students.txt already exists, overwrite it? Y/N   ");
+                var ans = Console.ReadLine();
+                if (ans.ToLower() == "y") 
                 {
                     string json = JsonConvert.SerializeObject(tempStud.ToArray());
-
-                    //write string to file
-                    System.IO.File.WriteAllText(FullPath, json);
-
-                    //jsonString = JsonSerializer.Serialize(tempStud);
-                    //File.WriteAllText(fileName, jsonString);
-                      
+                    System.IO.File.WriteAllText(FullPath, json); //write string to file
                     return true;
+
+                    /*jsonString = JsonSerializer.Serialize(tempStud);
+                    File.WriteAllText(fileName, jsonString);*/
+
+
+                    /* using (var file = File.CreateText(_studentRepositoryPath))
+                    {
+                        file.WriteAsync(JsonSerializer.Serialize(studentsList));
+                    } */
                 }
-            
                 else
                 {
+                    Console.WriteLine("You decided to cancel saving");
+                    
                     return false;
                 }
+
             }
             else
             {
                 Console.WriteLine($"{FullPath} was found NOT found");
                 return false;
             }
+            
             //Console.ReadLine();
         }
 
