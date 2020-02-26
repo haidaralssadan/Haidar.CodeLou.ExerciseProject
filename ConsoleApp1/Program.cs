@@ -521,7 +521,6 @@ namespace ConsoleApp1
                 Console.WriteLine($"{FullPath} was found NOT found");
                 return false;
             }
-
         } //Console.ReadLine(); 
 
         static bool WriteFile(string fName, ref List<Student> tempStud)
